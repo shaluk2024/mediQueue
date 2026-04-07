@@ -1,4 +1,4 @@
-# MediQueue Microservices System
+# MediQueue : AI-Powered Hospital Queue Management System
 
 ## 🚀 Tech Stack
 - Java 17+
