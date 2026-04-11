@@ -158,6 +158,9 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
+					<compilerArgs>
+						<arg>-parameters</arg>
+					</compilerArgs>
 					<excludes>
 						<exclude>
 							<groupId>org.projectlombok</groupId>
