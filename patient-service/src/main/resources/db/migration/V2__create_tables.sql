@@ -28,7 +28,7 @@ CREATE SEQUENCE IF NOT EXISTS appointments_id_seq
 -- ============================================================
 
 CREATE TABLE IF NOT EXISTS users (
-                                     id            BIGINT       PRIMARY KEY DEFAULT nextval('users_id_seq'),
+    id            BIGINT       PRIMARY KEY DEFAULT nextval('users_id_seq'),
 
     -- BaseEntity fields
     internal_code VARCHAR(15)  NOT NULL UNIQUE,           -- e.g. PAT-123-456, DOC-765-890
@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS users (
 -- ============================================================
 
 CREATE TABLE IF NOT EXISTS patients (
-                                        id              BIGINT      PRIMARY KEY DEFAULT nextval('patients_id_seq'),
+    id              BIGINT      PRIMARY KEY DEFAULT nextval('patients_id_seq'),
 
     -- BaseEntity fields
     internal_code   VARCHAR(15) NOT NULL UNIQUE,
@@ -84,7 +84,7 @@ CREATE INDEX IF NOT EXISTS idx_patient_blood_group
 -- ============================================================
 
 CREATE TABLE IF NOT EXISTS doctors (
-                                       id                BIGINT           PRIMARY KEY DEFAULT nextval('doctors_id_seq'),
+    id                BIGINT           PRIMARY KEY DEFAULT nextval('doctors_id_seq'),
 
     -- BaseEntity fields
     internal_code     VARCHAR(15)      NOT NULL UNIQUE,
@@ -117,7 +117,7 @@ CREATE INDEX IF NOT EXISTS idx_doctor_available
 -- ============================================================
 
 CREATE TABLE IF NOT EXISTS doctor_slots (
-                                            id            BIGINT      PRIMARY KEY DEFAULT nextval('doctor_slots_id_seq'),
+    id            BIGINT      PRIMARY KEY DEFAULT nextval('doctor_slots_id_seq'),
 
     -- BaseEntity fields
     internal_code VARCHAR(15) NOT NULL UNIQUE,
@@ -153,7 +153,7 @@ CREATE INDEX IF NOT EXISTS idx_slot_status
 -- ============================================================
 
 CREATE TABLE IF NOT EXISTS appointments (
-                                            id                BIGINT      PRIMARY KEY DEFAULT nextval('appointments_id_seq'),
+    id                BIGINT      PRIMARY KEY DEFAULT nextval('appointments_id_seq'),
 
     -- BaseEntity fields
     internal_code     VARCHAR(15) NOT NULL UNIQUE,

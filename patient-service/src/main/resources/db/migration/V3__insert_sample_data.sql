@@ -7,7 +7,12 @@
 -- BaseEntity fields: internal_code, created_at, updated_at
 -- version column only in doctor_slots
 -- ============================================================
-
+-- Reset sequences before inserting sample data
+ALTER SEQUENCE users_id_seq RESTART WITH 1;
+ALTER SEQUENCE patients_id_seq RESTART WITH 1;
+ALTER SEQUENCE doctors_id_seq RESTART WITH 1;
+ALTER SEQUENCE doctor_slots_id_seq RESTART WITH 1;
+ALTER SEQUENCE appointments_id_seq RESTART WITH 1;
 
 -- ============================================================
 -- USERS
@@ -30,31 +35,30 @@ INSERT INTO users (id, internal_code, created_at, updated_at, name, email, passw
  'Admin User', 'admin@mediqueue.com', '$2a$10$xn3LI/AjqicFYZFruSwve.681477XaVNaUQbr1gioaWPn4t1KJB.C', '9999900000', 'ADMIN'),
 
 -- Patients
-(nextval('users_id_seq'), 'PAT-101-201', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP,
+(nextval('users_id_seq'), 'USR-101-201', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP,
  'Rahul Gupta', 'rahul.gupta@gmail.com', '$2a$10$xn3LI/AjqicFYZFruSwve.681477XaVNaUQbr1gioaWPn4t1KJB.C', '9876501001', 'PATIENT'),
 
-(nextval('users_id_seq'), 'PAT-102-202', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP,
+(nextval('users_id_seq'), 'USR-102-202', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP,
  'Sneha Joshi', 'sneha.joshi@gmail.com', '$2a$10$xn3LI/AjqicFYZFruSwve.681477XaVNaUQbr1gioaWPn4t1KJB.C', '9876501002', 'PATIENT'),
 
-(nextval('users_id_seq'), 'PAT-103-203', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP,
+(nextval('users_id_seq'), 'USR-103-203', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP,
  'Arjun Mehta', 'arjun.mehta@gmail.com', '$2a$10$xn3LI/AjqicFYZFruSwve.681477XaVNaUQbr1gioaWPn4t1KJB.C', '9876501003', 'PATIENT'),
 
-(nextval('users_id_seq'), 'PAT-104-204', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP,
+(nextval('users_id_seq'), 'USR-104-204', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP,
  'Priya Nair', 'priya.nair@gmail.com', '$2a$10$xn3LI/AjqicFYZFruSwve.681477XaVNaUQbr1gioaWPn4t1KJB.C', '9876501004', 'PATIENT'),
 
 -- Doctors
-(nextval('users_id_seq'), 'DOC-101-201', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP,
+(nextval('users_id_seq'), 'USR-105-201', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP,
  'Dr. Rajesh Sharma', 'rajesh.sharma@mediqueue.com', '$2a$10$xn3LI/AjqicFYZFruSwve.681477XaVNaUQbr1gioaWPn4t1KJB.C', '9876502001', 'DOCTOR'),
 
-(nextval('users_id_seq'), 'DOC-102-202', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP,
+(nextval('users_id_seq'), 'USR-106-202', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP,
  'Dr. Priya Verma', 'priya.verma@mediqueue.com', '$2a$10$xn3LI/AjqicFYZFruSwve.681477XaVNaUQbr1gioaWPn4t1KJB.C', '9876502002', 'DOCTOR'),
 
-(nextval('users_id_seq'), 'DOC-103-203', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP,
+(nextval('users_id_seq'), 'USR-107-203', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP,
  'Dr. Amit Singh', 'amit.singh@mediqueue.com', '$2a$10$xn3LI/AjqicFYZFruSwve.681477XaVNaUQbr1gioaWPn4t1KJB.C', '9876502003', 'DOCTOR'),
 
-(nextval('users_id_seq'), 'DOC-104-204', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP,
+(nextval('users_id_seq'), 'USR-108-204', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP,
  'Dr. Kavita Rao', 'kavita.rao@mediqueue.com', '$2a$10$xn3LI/AjqicFYZFruSwve.681477XaVNaUQbr1gioaWPn4t1KJB.C', '9876502004', 'DOCTOR');
-
 
 -- ============================================================
 -- PATIENTS
