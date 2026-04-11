@@ -12,7 +12,7 @@ import lombok.*;
 @Getter
 @Setter // Lombok: generates getters and setters
 @NoArgsConstructor(access = AccessLevel.PROTECTED) // Lombok: no-args constructor
-@AllArgsConstructor // Lombok: all-args constructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE) // Lombok: all-args constructor
 @Builder // Lombok: builder pattern support
 public class Doctor extends BaseEntity{
 
@@ -76,13 +76,4 @@ public class Doctor extends BaseEntity{
     @Column(nullable = false)
     private boolean available = true;
 
-    /**
-     * Generates internalCode before saving if not already set.
-     */
-    @PrePersist
-    public void ensureInternalCode() {
-        if (getInternalCode() == null) {
-            setInternalCode(CodeUtil.generateDoctorCode());
-        }
-    }
 }

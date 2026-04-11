@@ -36,7 +36,7 @@ import java.time.LocalTime;
 })
 @Getter @Setter // Lombok: generates getters and setters
 @NoArgsConstructor(access = AccessLevel.PROTECTED) // Lombok: no-args constructor
-@AllArgsConstructor // Lombok: all-args constructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE) // Lombok: all-args constructor
 @Builder // Lombok: builder pattern support
 public class DoctorSlot extends BaseEntity{
 

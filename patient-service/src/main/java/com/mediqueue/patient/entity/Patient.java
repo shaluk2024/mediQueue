@@ -13,8 +13,8 @@ import java.time.LocalDate;
 @Table(name = "patients")
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE) // Lombok: all-args constructor
 @Builder
 public class Patient extends BaseEntity{
 
@@ -69,13 +69,4 @@ public class Patient extends BaseEntity{
     @Column(name = "medical_history", columnDefinition = "TEXT")
     private String medicalHistory;
 
-    /**
-     * Generates internalCode before saving if not already set.
-     */
-    @PrePersist
-    public void ensureInternalCode() {
-        if (getInternalCode() == null) {
-            setInternalCode(CodeUtil.generatePatientCode());
-        }
-    }
 }
