@@ -4,6 +4,7 @@ import com.mediqueue.patient.data.auth.AuthResponse;
 import com.mediqueue.patient.data.auth.LoginRequest;
 import com.mediqueue.patient.data.auth.RefreshRequest;
 import com.mediqueue.patient.data.auth.RegisterRequest;
+import com.mediqueue.patient.docs.AuthApi;
 import com.mediqueue.patient.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +25,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController // Marks this class as REST controller (returns JSON responses)
 @RequestMapping("/api/patients/auth") // Base URL for all endpoints
 @RequiredArgsConstructor // Lombok: constructor injection
-public class AuthController {
+public class AuthController implements AuthApi {
 
     /**
      * Service layer handling authentication logic.

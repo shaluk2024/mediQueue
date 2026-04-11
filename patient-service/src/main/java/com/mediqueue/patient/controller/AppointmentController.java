@@ -3,6 +3,7 @@ package com.mediqueue.patient.controller;
 import com.mediqueue.patient.data.appointment.AppointmentResponse;
 import com.mediqueue.patient.data.appointment.BookRequest;
 import com.mediqueue.patient.data.appointment.SlotResponse;
+import com.mediqueue.patient.docs.AppointmentApi;
 import com.mediqueue.patient.service.AppointmentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +30,7 @@ import java.util.List;
 @RestController // Marks this as REST controller
 @RequestMapping("/api/appointments") // Base URL
 @RequiredArgsConstructor // Lombok: constructor injection
-public class AppointmentController {
+public class AppointmentController implements AppointmentApi {
 
     /**
      * Service layer handling appointment business logic.

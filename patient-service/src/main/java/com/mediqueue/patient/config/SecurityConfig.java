@@ -55,7 +55,12 @@ public class SecurityConfig {
                         // Public endpoints (no authentication required)
                         .requestMatchers("/api/patients/auth/**").permitAll()
                         .requestMatchers("/actuator/**").permitAll()
-
+                        // ✅ Allow Swagger
+                        .requestMatchers(
+                                "/patient-service/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html"
+                        ).permitAll()
                         // Role-based access
                         .requestMatchers("/api/appointments/queue/**")
                         .hasAnyRole("DOCTOR", "ADMIN")

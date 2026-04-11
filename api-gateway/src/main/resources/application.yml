@@ -4,57 +4,96 @@ server:
 spring:
   application:
     name: api-gateway
+
   cloud:
     gateway:
       discovery:
         locator:
           enabled: true
           lower-case-service-id: true
-      # --- NEW 2025+ NAMESPACE FOR WEBFLUX ---
+
+      # --- ROUTES (WebFlux) ---
       server:
         webflux:
           routes:
+
+            # =========================
+            # PATIENT + APPOINTMENT + DOCTOR SERVICE
+            # =========================
             - id: patient-service
               uri: lb://patient-service
               predicates:
-                - Path=/api/patients/**, /api/appointments/**, /api/doctors/**
+                - Path=/api/patients/**, /api/appointments/**, /api/doctors/**, /patient-service/v3/api-docs/**
               filters:
                 - AuthenticationFilter
 
+            # =========================
+            # TRIAGE SERVICE
+            # =========================
             - id: triage-service
               uri: lb://triage-service
               predicates:
-                - Path=/api/triage/**
+                - Path=/api/triage/**, /triage-service/v3/api-docs/**
               filters:
                 - AuthenticationFilter
 
+            # =========================
+            # NOTIFICATION SERVICE
+            # =========================
             - id: notification-service
               uri: lb://notification-service
               predicates:
-                - Path=/api/notifications/**
+                - Path=/api/notifications/**, /notification-service/v3/api-docs/**
               filters:
                 - AuthenticationFilter
 
+# =========================
+# SPRINGDOC (Swagger Aggregation)
+# =========================
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    urls:
+      - name: Patient + Appointment + Doctor Service
+        url: /patient-service/v3/api-docs
+
+      - name: Triage Service
+        url: /triage-service/v3/api-docs
+
+      - name: Notification Service
+        url: /notification-service/v3/api-docs
+
+# =========================
+# EUREKA
+# =========================
 eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka/
 
+# =========================
+# ACTUATOR + TRACING
+# =========================
 management:
   endpoints:
     web:
       exposure:
         include: health,info,gateway
-  # Actuator Gateway remains under this namespace
+
   endpoint:
     gateway:
       enabled: true
+
   tracing:
     sampling:
       probability: 0.0
+
   zipkin:
     tracing:
       endpoint: http://localhost:9411/api/v2/spans
 
+# =========================
+# JWT
+# =========================
 jwt:
   secret: mediqueue-secret-key-must-be-at-least-256-bits-long-for-hs256

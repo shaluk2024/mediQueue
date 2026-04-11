@@ -1,5 +1,6 @@
 package com.mediqueue.patient.exception;
 
+import com.mediqueue.patient.data.ApiError;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,8 +37,8 @@ public class GlobalExceptionHandler {
      * Returns HTTP 404.
      */
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<Map<String, Object>> handleNotFound(ResourceNotFoundException ex) {
-        return error(HttpStatus.NOT_FOUND, ex.getMessage());
+    public ResponseEntity<ApiError> handleNotFound(ResourceNotFoundException ex) {
+        return build(HttpStatus.NOT_FOUND, ex.getMessage(), "RESOURCE_NOT_FOUND", null);
     }
 
     /**
@@ -50,8 +51,8 @@ public class GlobalExceptionHandler {
      * Returns HTTP 400.
      */
     @ExceptionHandler(BadRequestException.class)
-    public ResponseEntity<Map<String, Object>> handleBadRequest(BadRequestException ex) {
-        return error(HttpStatus.BAD_REQUEST, ex.getMessage());
+    public ResponseEntity<ApiError> handleBadRequest(BadRequestException ex) {
+        return build(HttpStatus.BAD_REQUEST, ex.getMessage(), "BAD_REQUEST", null);
     }
 
     /**
@@ -64,8 +65,8 @@ public class GlobalExceptionHandler {
      * Returns HTTP 409 (Conflict).
      */
     @ExceptionHandler(SlotAlreadyBookedException.class)
-    public ResponseEntity<Map<String, Object>> handleSlotBooked(SlotAlreadyBookedException ex) {
-        return error(HttpStatus.CONFLICT, ex.getMessage());
+    public ResponseEntity<ApiError> handleSlotBooked(SlotAlreadyBookedException ex) {
+        return build(HttpStatus.CONFLICT, ex.getMessage(), "SLOT_ALREADY_BOOKED", null);
     }
 
     /**
@@ -77,8 +78,8 @@ public class GlobalExceptionHandler {
      * Returns HTTP 401 (Unauthorized).
      */
     @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<Map<String, Object>> handleBadCredentials(BadCredentialsException ex) {
-        return error(HttpStatus.UNAUTHORIZED, ex.getMessage());
+    public ResponseEntity<ApiError> handleBadCredentials(BadCredentialsException ex) {
+        return build(HttpStatus.UNAUTHORIZED, ex.getMessage(), "INVALID_CREDENTIALS", null);
     }
 
     /**
@@ -92,14 +93,19 @@ public class GlobalExceptionHandler {
      * Returns HTTP 400.
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, Object>> handleValidation(MethodArgumentNotValidException ex) {
+    public ResponseEntity<ApiError> handleValidation(MethodArgumentNotValidException ex) {
 
-        String message = ex.getBindingResult().getFieldErrors().stream()
-                .map(e -> e.getField() + ": " + e.getDefaultMessage())
-                .findFirst()
-                .orElse("Validation failed");
+        Map<String, String> errors = new HashMap<>();
 
-        return error(HttpStatus.BAD_REQUEST, message);
+        ex.getBindingResult().getFieldErrors()
+                .forEach(e -> errors.put(e.getField(), e.getDefaultMessage()));
+
+        return build(
+                HttpStatus.BAD_REQUEST,
+                "Validation failed",
+                "VALIDATION_ERROR",
+                errors
+        );
     }
 
     /**
@@ -111,11 +117,16 @@ public class GlobalExceptionHandler {
      * Returns HTTP 500.
      */
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<Map<String, Object>> handleGeneral(Exception ex) {
+    public ResponseEntity<ApiError> handleGeneral(Exception ex) {
 
         log.error("Unexpected error", ex);
 
-        return error(HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected error occurred");
+        return build(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                "An unexpected error occurred",
+                "INTERNAL_SERVER_ERROR",
+                null
+        );
     }
 
     /**
@@ -133,14 +144,21 @@ public class GlobalExceptionHandler {
      * @param message error message
      * @return ResponseEntity with structured error body
      */
-    private ResponseEntity<Map<String, Object>> error(HttpStatus status, String message) {
+    private ResponseEntity<ApiError> build(
+            HttpStatus status,
+            String message,
+            String code,
+            Map<String, String> validationErrors
+    ) {
 
-        Map<String, Object> body = new HashMap<>();
-
-        body.put("timestamp", LocalDateTime.now().toString());
-        body.put("status", status.value());
-        body.put("error", status.getReasonPhrase());
-        body.put("message", message);
+        ApiError body = ApiError.builder()
+                .timestamp(LocalDateTime.now())
+                .status(status.value())
+                .error(status.getReasonPhrase())
+                .message(message)
+                .code(code)
+                .validationErrors(validationErrors)
+                .build();
 
         return ResponseEntity.status(status).body(body);
     }

@@ -40,7 +40,9 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
      */
     private static final List<String> PUBLIC_PATHS = List.of(
             "/api/patients/auth/login",
-            "/api/patients/auth/register"
+            "/api/patients/auth/register",
+            "/patient-service/v3/api-docs",
+            "/swagger-ui"
     );
 
     /**
