@@ -30,7 +30,7 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
 
     /**
      * Secret key used to sign/validate JWT tokens
-     * Injected from application.properties
+     * Injected from application.yml
      */
     @Value("${jwt.secret}")
     private String jwtSecret;
@@ -56,11 +56,11 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
      * This method is executed for every incoming request
      */
     @Override
-    public GatewayFilter apply(Config config) {
+    public GatewayFilter apply(final Config config) {
         return (exchange, chain) -> {
 
             // Get request path
-            String path = exchange.getRequest().getPath().value();
+            final String path = exchange.getRequest().getPath().value();
 
             // ✅ Allow public endpoints without JWT validation
             if (PUBLIC_PATHS.stream().anyMatch(path::startsWith)) {
@@ -68,7 +68,7 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
             }
 
             // Extract Authorization header
-            String authHeader = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
+            final String authHeader = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
 
             // ❌ If header missing or invalid → return 401
             if (authHeader == null || !authHeader.startsWith("Bearer ")) {
@@ -76,14 +76,14 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
             }
 
             // Extract token (remove "Bearer ")
-            String token = authHeader.substring(7);
+            final String token = authHeader.substring(7);
 
             try {
                 // Parse JWT and extract claims
-                Claims claims = extractClaims(token);
+                final Claims claims = extractClaims(token);
 
                 // Add user info to request headers for downstream services
-                ServerWebExchange mutatedExchange = exchange.mutate()
+                final ServerWebExchange mutatedExchange = exchange.mutate()
                         .request(r -> r.header("X-User-Id", claims.getSubject())
                                 .header("X-User-Role", claims.get("role", String.class)))
                         .build();
@@ -92,6 +92,7 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
                 return chain.filter(mutatedExchange);
 
             } catch (Exception e) {
+                System.err.println("JWT Validation failed: " + e.getMessage());
                 // ❌ Invalid token → return 401
                 return unauthorized(exchange);
             }
@@ -102,7 +103,7 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
      * Extracts claims from JWT token
      */
     private Claims extractClaims(String token) {
-        Key key = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
+        final Key key = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
 
         return Jwts.parserBuilder()
                 .setSigningKey(key)
@@ -114,7 +115,7 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
     /**
      * Returns 401 Unauthorized response
      */
-    private Mono<Void> unauthorized(ServerWebExchange exchange) {
+    private Mono<Void> unauthorized(final ServerWebExchange exchange) {
         exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
         return exchange.getResponse().setComplete();
     }
