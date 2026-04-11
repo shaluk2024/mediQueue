@@ -15,7 +15,7 @@ import javax.sql.DataSource;
 @Configuration
 public class FlywayConfig {
 
-    // Pulling the migration script location from application.properties
+    // Pulling the migration script location from application.yml
     // Defaulting to the standard classpath:db/migration if not specified
     @Value("${spring.flyway.locations:classpath:db/migration}")
     private String locations;
