@@ -1,0 +1,60 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      # --- NEW 2025+ NAMESPACE FOR WEBFLUX ---
+      server:
+        webflux:
+          routes:
+            - id: patient-service
+              uri: lb://patient-service
+              predicates:
+                - Path=/api/patients/**, /api/appointments/**, /api/doctors/**
+              filters:
+                - AuthenticationFilter
+
+            - id: triage-service
+              uri: lb://triage-service
+              predicates:
+                - Path=/api/triage/**
+              filters:
+                - AuthenticationFilter
+
+            - id: notification-service
+              uri: lb://notification-service
+              predicates:
+                - Path=/api/notifications/**
+              filters:
+                - AuthenticationFilter
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,gateway
+  # Actuator Gateway remains under this namespace
+  endpoint:
+    gateway:
+      enabled: true
+  tracing:
+    sampling:
+      probability: 0.0
+  zipkin:
+    tracing:
+      endpoint: http://localhost:9411/api/v2/spans
+
+jwt:
+  secret: mediqueue-secret-key-must-be-at-least-256-bits-long-for-hs256
