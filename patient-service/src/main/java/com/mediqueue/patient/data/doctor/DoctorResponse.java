@@ -1,5 +1,6 @@
 package com.mediqueue.patient.data.doctor;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.mediqueue.patient.entity.Doctor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,9 +24,11 @@ public class DoctorResponse {
     private String name;
 
     /** Email of the doctor (from User). */
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String email;
 
     /** Phone number of the doctor (from User). */
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String phone;
 
     /** Medical specialization (e.g. Cardiology, Neurology). */
@@ -62,4 +65,18 @@ public class DoctorResponse {
                 .available(d.isAvailable())
                 .build();
     }
+
+    public static DoctorResponse map(final Doctor d) {
+        return DoctorResponse.builder()
+                .doctorId(d.getInternalCode())
+                .phone(d.getUser().getPhone())
+                .specialization(d.getSpecialization())
+                .qualification(d.getQualification())
+                .experienceYears(d.getExperienceYears())
+                .consultationFee(d.getConsultationFee())
+                .available(d.isAvailable())
+                .build();
+    }
+
+
 }

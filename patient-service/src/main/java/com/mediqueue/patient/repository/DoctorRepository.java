@@ -25,6 +25,8 @@ public interface DoctorRepository extends JpaRepository<Doctor, String> {
 
     Optional<Doctor> findByInternalCode(String code);
 
+    Optional<Doctor> findByUserInternalCode(String internalCode);
+
     /**
      * Fetch all doctors who are currently available.
      *

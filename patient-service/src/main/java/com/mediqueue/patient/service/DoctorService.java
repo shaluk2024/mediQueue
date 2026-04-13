@@ -46,7 +46,7 @@ public class DoctorService {
      */
     public DoctorResponse getDoctorByCode(final String doctorCode) {
         return doctorRepository.findByInternalCode(doctorCode)
-                .map(DoctorResponse::from)
+                .map(DoctorResponse::map)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Doctor not found with code: " + doctorCode));
     }
@@ -62,7 +62,7 @@ public class DoctorService {
      * @throws ResourceNotFoundException if doctor profile not found for user
      */
     public DoctorResponse getMyProfile(final String userCode) {
-        return doctorRepository.findByInternalCode(userCode)
+        return doctorRepository.findByUserInternalCode(userCode)
                 .map(DoctorResponse::from)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Doctor profile not found for user: " + userCode));
@@ -79,7 +79,7 @@ public class DoctorService {
     public List<DoctorResponse> searchBySpecialization(final String specialization) {
         return doctorRepository.findByAvailableTrueAndSpecializationContainingIgnoreCase(specialization)
                 .stream()
-                .map(DoctorResponse::from)
+                .map(DoctorResponse::map)
                 .toList();
     }
 
@@ -93,7 +93,7 @@ public class DoctorService {
     public List<DoctorResponse> getAllAvailableDoctors() {
         return doctorRepository.findByAvailableTrue()
                 .stream()
-                .map(DoctorResponse::from)
+                .map(DoctorResponse::map)
                 .toList();
     }
 
@@ -112,7 +112,7 @@ public class DoctorService {
     @PreAuthorize("hasRole('DOCTOR')")
     public DoctorResponse updateMyProfile(final String userCode, final UpdateDoctorRequest request) {
 
-        final var doctor = doctorRepository.findByInternalCode(userCode)
+        final var doctor = doctorRepository.findByUserInternalCode(userCode)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Doctor profile not found for user: " + userCode));
 
