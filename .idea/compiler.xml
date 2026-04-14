@@ -7,8 +7,9 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="api-gateway" />
-        <module name="eureka-server" />
         <module name="patient-service" />
+        <module name="eureka-server" />
+        <module name="notification-service" />
       </profile>
     </annotationProcessing>
   </component>

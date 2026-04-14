@@ -61,6 +61,7 @@
         <module>eureka-server</module>
         <module>api-gateway</module>
         <module>patient-service</module>
+        <module>notification-service</module>
     </modules>
 
     <build>
