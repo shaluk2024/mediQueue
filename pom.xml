@@ -62,6 +62,7 @@
         <module>api-gateway</module>
         <module>patient-service</module>
         <module>notification-service</module>
+        <module>common</module>
     </modules>
 
     <build>
