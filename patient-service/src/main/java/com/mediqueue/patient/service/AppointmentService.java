@@ -1,14 +1,14 @@
 package com.mediqueue.patient.service;
 
+import com.mediqueue.common.events.AppointmentBookedEvent;
+import com.mediqueue.common.events.AppointmentCancelledEvent;
+import com.mediqueue.common.events.QueueUpdatedEvent;
 import com.mediqueue.patient.data.AppointmentStatus;
 import com.mediqueue.patient.data.SlotStatus;
 import com.mediqueue.patient.data.TriagePriority;
 import com.mediqueue.patient.data.appointment.AppointmentResponse;
 import com.mediqueue.patient.data.appointment.BookRequest;
 import com.mediqueue.patient.data.appointment.SlotResponse;
-import com.mediqueue.patient.data.events.AppointmentBookedEvent;
-import com.mediqueue.patient.data.events.AppointmentCancelledEvent;
-import com.mediqueue.patient.data.events.QueueUpdatedEvent;
 import com.mediqueue.patient.entity.Appointment;
 import com.mediqueue.patient.entity.Doctor;
 import com.mediqueue.patient.entity.DoctorSlot;
@@ -194,7 +194,7 @@ public class AppointmentService {
                 .symptoms(request.getSymptoms())
                 .build();
 
-        //kafkaTemplate.send(appointmentBookedTopic, appointment.getInternalCode(), event);
+        kafkaTemplate.send(appointmentBookedTopic, appointment.getInternalCode(), event);
 
         log.info("Appointment booked: {}", appointment.getId());
 

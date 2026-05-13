@@ -1,6 +1,9 @@
 package com.mediqueue.notification.consumer;
 
-import com.mediqueue.notification.events.*;
+import com.mediqueue.common.events.AppointmentBookedEvent;
+import com.mediqueue.common.events.AppointmentCancelledEvent;
+import com.mediqueue.common.events.QueueUpdatedEvent;
+import com.mediqueue.common.events.TriageCompletedEvent;
 import com.mediqueue.notification.service.EmailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -8,8 +11,8 @@ import org.springframework.kafka.annotation.DltHandler;
 import org.springframework.kafka.annotation.EnableKafkaRetryTopic;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.annotation.RetryableTopic;
+import org.springframework.kafka.annotation.BackOff;
 import org.springframework.kafka.retrytopic.TopicSuffixingStrategy;
-import org.springframework.retry.annotation.Backoff;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
@@ -60,7 +63,7 @@ public class NotificationConsumer {
      */
     @RetryableTopic(
             attempts = "3",
-            backoff = @Backoff(delay = 2000, multiplier = 2.0),
+            backOff = @BackOff(delay = 2000, multiplier = 2.0),
             topicSuffixingStrategy = TopicSuffixingStrategy.SUFFIX_WITH_INDEX_VALUE,
             dltTopicSuffix = ".dlq"
     )
@@ -95,7 +98,7 @@ public class NotificationConsumer {
      */
     @RetryableTopic(
             attempts = "3",
-            backoff = @Backoff(delay = 2000, multiplier = 2.0),
+            backOff = @BackOff(delay = 2000, multiplier = 2.0),
             topicSuffixingStrategy = TopicSuffixingStrategy.SUFFIX_WITH_INDEX_VALUE,
             dltTopicSuffix = ".dlq"
     )
@@ -132,7 +135,7 @@ public class NotificationConsumer {
      */
     @RetryableTopic(
             attempts = "3",
-            backoff = @Backoff(delay = 2000, multiplier = 2.0),
+            backOff = @BackOff(delay = 2000, multiplier = 2.0),
             topicSuffixingStrategy = TopicSuffixingStrategy.SUFFIX_WITH_INDEX_VALUE,
             dltTopicSuffix = ".dlq"
     )
@@ -167,7 +170,7 @@ public class NotificationConsumer {
      */
     @RetryableTopic(
             attempts = "3",
-            backoff = @Backoff(delay = 2000, multiplier = 2.0),
+            backOff = @BackOff(delay = 2000, multiplier = 2.0),
             topicSuffixingStrategy = TopicSuffixingStrategy.SUFFIX_WITH_INDEX_VALUE,
             dltTopicSuffix = ".dlq"
     )
