@@ -1,7 +1,9 @@
 package com.mediqueue.common.events;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /**
  * Event published when triage analysis is completed for an appointment.
@@ -16,8 +18,10 @@ import lombok.Getter;
  * to avoid breaking existing consumers.
  * </p>
  */
-@Getter
 @AllArgsConstructor
+@Builder
+@Getter
+@NoArgsConstructor
 public class TriageCompletedEvent {
 
     /**

@@ -1,0 +1,87 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: triage-service
+
+  ai:
+    openai:
+      # Groq is OpenAI-compatible — just swap the base URL
+      base-url: https://api.groq.com/openai
+      api-key: ${GROQ_API_KEY}
+      chat:
+        options:
+          model: llama3-8b-8192
+          temperature: 0.3
+          max-tokens: 500
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 2000ms
+
+  cache:
+    type: redis
+    redis:
+      time-to-live: 3600000   # 1 hour for triage results
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: triage-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "com.mediqueue.*"
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
+
+resilience4j:
+  circuit-breaker:
+    instances:
+      llmService:
+        sliding-window-size: 5
+        failure-rate-threshold: 60
+        wait-duration-in-open-state: 30s
+        permitted-calls-in-half-open-state: 2
+        slow-call-duration-threshold: 4s
+        slow-call-rate-threshold: 80
+        register-health-indicator: true
+  retry:
+    instances:
+      llmService:
+        max-attempts: 3
+        wait-duration: 1s
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, circuitbreakers, metrics
+  health:
+    circuitbreakers:
+      enabled: true
+  tracing:
+    sampling:
+      probability: 1.0
+  zipkin:
+    tracing:
+      endpoint: http://localhost:9411/api/v2/spans
+
+kafka:
+  topics:
+    appointment-booked: appointment.booked
+    triage-completed: triage.completed
+    triage-dlq: triage.completed.dlq
+

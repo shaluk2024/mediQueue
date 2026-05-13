@@ -63,6 +63,7 @@
         <module>patient-service</module>
         <module>notification-service</module>
         <module>common</module>
+        <module>triage-service</module>
     </modules>
 
     <build>
